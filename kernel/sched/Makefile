@@ -29,6 +29,7 @@ obj-$(CONFIG_CPU_FREQ_GOV_SCHEDUTIL) += cpufreq_schedutil.o
 obj-$(CONFIG_MEMBARRIER) += membarrier.o
 obj-$(CONFIG_CPU_ISOLATION) += isolation.o
 obj-$(CONFIG_PSI) += psi.o
+obj-$(CONFIG_SCHED_CORE) += core_sched.o
 obj-$(CONFIG_SCHED_TUNE_DUMMY) += tune_dummy.o
 
 ccflags-y += -Wno-gcc-compat -Wno-compare-distinct-pointer-types
