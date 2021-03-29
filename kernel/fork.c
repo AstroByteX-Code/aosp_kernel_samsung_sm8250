@@ -2217,6 +2217,8 @@ static __latent_entropy struct task_struct *copy_process(
 
 	klp_copy_process(p);
 
+	sched_core_fork(p);
+
 	spin_lock(&current->sighand->siglock);
 
 	/*
@@ -2303,6 +2305,7 @@ static __latent_entropy struct task_struct *copy_process(
 	return p;
 
 bad_fork_cancel_cgroup:
+	sched_core_free(p);
 	spin_unlock(&current->sighand->siglock);
 	write_unlock_irq(&tasklist_lock);
 	cgroup_cancel_fork(p, args);
