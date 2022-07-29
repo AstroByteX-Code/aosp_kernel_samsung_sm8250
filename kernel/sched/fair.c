@@ -4941,7 +4941,7 @@ static inline void adjust_cpus_for_packing(struct task_struct *p,
 
 static inline void update_misfit_status(struct task_struct *p, struct rq *rq)
 {
-        int cpu = cpu_of(rq);
+    int cpu = cpu_of(rq);
 
 	if (!sched_asym_cpucap_active())
 		return;
