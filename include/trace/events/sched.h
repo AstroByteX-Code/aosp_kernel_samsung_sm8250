@@ -1037,7 +1037,7 @@ TRACE_EVENT(sched_cpu_util,
 		__entry->cpu_util_cum       = cpu_util_cum(cpu, 0);
 		__entry->capacity_curr      = capacity_curr_of(cpu);
 		__entry->capacity           = capacity_of(cpu);
-		__entry->capacity_orig      = capacity_orig_of(cpu);
+		__entry->capacity_orig      = arch_scale_cpu_capacity(cpu);
 		__entry->idle_state         = idle_get_state_idx(cpu_rq(cpu));
 		__entry->irqload            = sched_irqload(cpu);
 		__entry->online             = cpu_online(cpu);
@@ -1490,7 +1490,7 @@ TRACE_EVENT(sched_capacity_update,
 	TP_fast_assign(
 		__entry->cpu			= cpu;
 		__entry->capacity		= capacity_of(cpu);
-		__entry->capacity_orig		= capacity_orig_of(cpu);
+		__entry->capacity_orig		= arch_scale_cpu_capacity(cpu);
 	),
 
 	TP_printk("cpu=%d capacity=%u capacity_orig=%u",
