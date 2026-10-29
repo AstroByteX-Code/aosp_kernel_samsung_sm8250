@@ -280,6 +280,7 @@ int fuse_create_open_backing(
 					 dir_fuse_dentry->backing_path.mnt,
 					 dir_fuse_dentry->backing_path.dentry,
 					 strlen(fa->in_args[1].value));
+	inode_unlock(dir_fuse_inode->backing_inode);
 
 	if (IS_ERR(backing_dentry)) {
 		inode_unlock(dir_fuse_inode->backing_inode);
@@ -295,7 +296,6 @@ int fuse_create_open_backing(
 	err = vfs_create2(dir_fuse_dentry->backing_path.mnt,
 			  dir_fuse_inode->backing_inode, backing_dentry,
 			  fci->mode, true);
-	inode_unlock(dir_fuse_inode->backing_inode);
 
 	if (err)
 		goto out;
