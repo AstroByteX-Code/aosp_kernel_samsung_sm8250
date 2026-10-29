@@ -98,7 +98,7 @@
  * This is best for PREEMPT_RT, but for non-RT it can cause issues
  * when preemption is disabled for long periods of time. Have
  * it only default enabled for PREEMPT_RT.
- */
+ */ 
 #define SCHED_FEAT_RT_PUSH_IPI 1
 #else
 #define SCHED_FEAT_RT_PUSH_IPI 0
