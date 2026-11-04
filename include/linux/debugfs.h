@@ -38,11 +38,6 @@ struct debugfs_regset32 {
 	struct device *dev;	/* Optional device for Runtime PM */
 };
 
-struct debugfs_u32_array {
-	u32 *array;
-	u32 n_elements;
-};
-
 extern struct dentry *arch_debugfs_dir;
 
 #define DEFINE_DEBUGFS_ATTRIBUTE_XSIGNED(__fops, __get, __set, __fmt, __is_signed)	\
@@ -151,8 +146,7 @@ void debugfs_print_regs32(struct seq_file *s, const struct debugfs_reg32 *regs,
 			  int nregs, void __iomem *base, char *prefix);
 
 void debugfs_create_u32_array(const char *name, umode_t mode,
-			      struct dentry *parent,
-			      struct debugfs_u32_array *array);
+			      struct dentry *parent, u32 *array, u32 elements);
 
 struct dentry *debugfs_create_devm_seqfile(struct device *dev, const char *name,
 					   struct dentry *parent,
@@ -382,8 +376,8 @@ static inline bool debugfs_initialized(void)
 }
 
 static inline void debugfs_create_u32_array(const char *name, umode_t mode,
-					    struct dentry *parent,
-					    struct debugfs_u32_array *array)
+					    struct dentry *parent, u32 *array,
+					    u32 elements)
 {
 }
 

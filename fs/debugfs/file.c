@@ -929,6 +929,11 @@ struct dentry *debugfs_create_blob(const char *name, umode_t mode,
 }
 EXPORT_SYMBOL_GPL(debugfs_create_blob);
 
+struct array_data {
+	void *array;
+	u32 elements;
+};
+
 static size_t u32_format_array(char *buf, size_t bufsize,
 			       u32 *array, int array_size)
 {
@@ -949,8 +954,8 @@ static size_t u32_format_array(char *buf, size_t bufsize,
 
 static int u32_array_open(struct inode *inode, struct file *file)
 {
-	struct debugfs_u32_array *data = inode->i_private;
-	int size, elements = data->n_elements;
+	struct array_data *data = inode->i_private;
+	int size, elements = data->elements;
 	char *buf;
 
 	/*
@@ -965,7 +970,7 @@ static int u32_array_open(struct inode *inode, struct file *file)
 	buf[size] = 0;
 
 	file->private_data = buf;
-	u32_format_array(buf, size, data->array, data->n_elements);
+	u32_format_array(buf, size, data->array, data->elements);
 
 	return nonseekable_open(inode, file);
 }
@@ -1002,7 +1007,8 @@ static const struct file_operations u32_array_fops = {
  * @parent: a pointer to the parent dentry for this file.  This should be a
  *          directory dentry if set.  If this parameter is %NULL, then the
  *          file will be created in the root of the debugfs filesystem.
- * @array: wrapper struct containing data pointer and size of the array.
+ * @array: u32 array that provides data.
+ * @elements: total number of elements in the array.
  *
  * This function creates a file in debugfs with the given name that exports
  * @array as data. If the @mode variable is so set it can be read from.
@@ -1010,10 +1016,17 @@ static const struct file_operations u32_array_fops = {
  * Once array is created its size can not be changed.
  */
 void debugfs_create_u32_array(const char *name, umode_t mode,
-			      struct dentry *parent,
-			      struct debugfs_u32_array *array)
+			      struct dentry *parent, u32 *array, u32 elements)
 {
-	debugfs_create_file_unsafe(name, mode, parent, array, &u32_array_fops);
+	struct array_data *data = kmalloc(sizeof(*data), GFP_KERNEL);
+
+	if (data == NULL)
+		return;
+
+	data->array = array;
+	data->elements = elements;
+
+	debugfs_create_file_unsafe(name, mode, parent, data, &u32_array_fops);
 }
 EXPORT_SYMBOL_GPL(debugfs_create_u32_array);
 
