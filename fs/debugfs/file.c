@@ -1014,19 +1014,25 @@ static const struct file_operations u32_array_fops = {
  * @array as data. If the @mode variable is so set it can be read from.
  * Writing is not supported. Seek within the file is also not supported.
  * Once array is created its size can not be changed.
+ *
+ * The function returns a pointer to dentry on success. If an error occurs,
+ * %ERR_PTR(-ERROR) or NULL will be returned. If debugfs is not enabled in
+ * the kernel, the value %ERR_PTR(-ENODEV) will be returned.
  */
-void debugfs_create_u32_array(const char *name, umode_t mode,
-			      struct dentry *parent, u32 *array, u32 elements)
+struct dentry *debugfs_create_u32_array(const char *name, umode_t mode,
+					    struct dentry *parent,
+					    u32 *array, u32 elements)
 {
 	struct array_data *data = kmalloc(sizeof(*data), GFP_KERNEL);
 
 	if (data == NULL)
-		return;
+		return NULL;
 
 	data->array = array;
 	data->elements = elements;
 
-	debugfs_create_file_unsafe(name, mode, parent, data, &u32_array_fops);
+	return debugfs_create_file_unsafe(name, mode, parent, data,
+					&u32_array_fops);
 }
 EXPORT_SYMBOL_GPL(debugfs_create_u32_array);
 
