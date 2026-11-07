@@ -100,7 +100,7 @@ fi
 
 rm -rf AnyKernel3
 echo "[*] Cloning AnyKernel3 for $DEVICE"
-git clone -q -b "$AK3_BRANCH" "$AK3_REPO" AnyKernel3 || exit 1
+git clone -q -b "$AK3_BRANCH" "$AK3_REPO" --depth=1 AnyKernel3 || exit 1
 
 echo -e "Preparing zip...\n"
 
@@ -113,6 +113,9 @@ cd AnyKernel3
 
 zip -r9 "../$ZIPNAME" * -x .git README.md *placeholder
 cd ..
+
+git restore drivers/Kconfig
+git restore drivers/Makefile
 
 echo -e "\n${GREEN}Completed in $((SECONDS / 60)) minute(s) and $((SECONDS % 60)) second(s)!${NC}"
 echo -e "${GREEN}Zip: $ZIPNAME${NC}"
