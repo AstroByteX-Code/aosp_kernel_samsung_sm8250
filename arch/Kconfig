@@ -495,7 +495,7 @@ config STACKPROTECTOR_STRONG
 	  size by about 2%.
 
 config LTO
-	def_bool y
+	def_bool n
 
 config ARCH_SUPPORTS_LTO_CLANG
 	bool
@@ -1015,7 +1015,6 @@ config RELR
 	bool
 	default y
 	depends on ARCH_HAS_RELR && TOOLS_SUPPORT_RELR
-	select LTO_CLANG #ok
 	help
 	  Store the kernel's dynamic relocations in the RELR relocation packing
 	  format. Requires a compatible linker (LLD supports this feature), as
