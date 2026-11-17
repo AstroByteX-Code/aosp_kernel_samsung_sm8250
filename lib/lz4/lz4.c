@@ -259,18 +259,6 @@ static int LZ4_isAligned(const void *ptr, size_t alignment)
 *  Types
 **************************************/
 #include <linux/types.h>
-#include <linux/slab.h>
-
-#ifndef ALLOC
-#  define ALLOC(s)	kmalloc(s, GFP_NOIO)
-#endif
-#ifndef FREEMEM
-#  define FREEMEM(p)	kfree(p)
-#endif
-#ifndef ALLOC_AND_ZERO
-#  define ALLOC_AND_ZERO(s) kzalloc(s, GFP_NOIO)
-#endif
-
 typedef uint8_t BYTE;
 typedef uint16_t U16;
 typedef uint32_t U32;
@@ -1782,8 +1770,6 @@ int LZ4_compress_destSize_extState(void *state, const char *src, char *dst,
 int LZ4_compress_destSize(const char *src, char *dst, int *srcSizePtr,
 			  int targetDstSize)
 {
-	int result;
-
 #if (LZ4_HEAPMODE)
 	LZ4_stream_t *const ctx = (LZ4_stream_t *)ALLOC(sizeof(
 		LZ4_stream_t)); /* malloc-calloc always properly aligned */
@@ -1794,7 +1780,7 @@ int LZ4_compress_destSize(const char *src, char *dst, int *srcSizePtr,
 	LZ4_stream_t *const ctx = &ctxBody;
 #endif
 
-	result = LZ4_compress_destSize_extState_internal(
+	int result = LZ4_compress_destSize_extState_internal(
 		ctx, src, dst, srcSizePtr, targetDstSize, 1);
 
 #if (LZ4_HEAPMODE)
